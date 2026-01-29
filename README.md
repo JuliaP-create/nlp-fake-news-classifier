@@ -61,16 +61,16 @@ Final winner: **Tuned XGBoost (BoW + engineered features)**
 
 ## Repository structure
 .
-├── main.ipynb # notebook with well-documented Python code that conducts the analysis
-├── datasets/ 
-│ ├── training_data.csv
-│ └── testing_data.csv
-├── figures/ # saved plots from the notebook
-├── outputs/ # csv summaries + prediction files + accuracy estimation file
-├── models/ # saved models
-├── requirements.txt
-└── README.md
-└── NLP_Project_Julia.pptx # presentation file, presenting the project including analysis
+├── main.ipynb # notebook with well-documented Python code that conducts the analysis  
+├── datasets/   
+│ ├── training_data.csv   
+│ └── testing_data.csv  
+├── figures/ # saved plots from the notebook  
+├── outputs/ # csv summaries + prediction files + accuracy estimation file  
+├── models/ # saved models  
+├── requirements.txt  
+└── README.md   
+└── NLP_Project_Julia.pptx # presentation file, presenting the project including analysis  
 
 ## Deliverables
 
