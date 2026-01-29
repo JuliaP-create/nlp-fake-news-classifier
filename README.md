@@ -1,31 +1,80 @@
-![logo_ironhack_blue 7](https://user-images.githubusercontent.com/23629340/40541063-a07a0a8a-601a-11e8-91b5-2f13e4e6b441.png)
+# Fake vs Real News Headlines — NLP Classifier
 
-# Natural Language Processing Challenge
+This repository contains my **NLP bootcamp project** (Ironhack Data Science & Machine Learning).
+The goal is to build a model that classifies **news headlines** as:
 
-## Introduction
+- `0` = **Fake**
+- `1` = **Real**
 
-Learning how to process text is a skill required for Data Scientists. 
-In this project, you will put these skills into practice to identify whether a news headline is real or fake news.
+The final notebook also generates predictions for the provided test file, where almost all the labels are placeholders (e.g., `2`).
 
-## Project Overview
+---
 
-In the file `dataset/training_data.csv` you will find dataset containing news headlines and their tags: 
-0, if the headline is fake news, and, 1, if the headline is real news. 
+## Dataset
 
-Your goal is to build a classifier that is able to distinguish between the two.
+For this project I worked with two prepared files:
 
-Once you have a classifier built, then use it to predict the labels for `dataset/testing_data.csv`. Generate a new file
-where the label `2` has been replaced by `0` (fake) or `1` (real) according to your model. Please respect the original file format, 
-do not include extra columns, and respect the column separator. 
+- `dataset/training_data.csv` — tab-separated: `label<TAB>headline`
+- `dataset/testing_data.csv` — tab-separated: `label<TAB>headline` (may include placeholder labels)
 
+**Training set size (raw):** 34,152 headlines
+**Duplicates removed:** 1,946 duplicate headlines (to avoid leakage)
+**Training set size (deduplicated):** 32,206 unique headlines
 
-## Guidance
-Like in a real life scenario, you are able to make your own choices and text treatment. 
-Use the techniques you have learned and the common packages to process this data and classify the text.
+---
+
+## Approach 
+
+1. **EDA / signal discovery**
+- Duplicate headlines
+- Headline length (words and characters) statistics
+- Stopword patterns
+
+2. **Text preprocessing (hybrid)**
+- Lowercasing, URL/email removal, punctuation cleanup
+- Stopword removal **but keeping high-signal words**:
+`not, no, never, only, just, very, again, even`
+- POS-aware lemmatization (NLTK)
+
+3. **Vectorization**
+- Compared **Bag of Words (CountVectorizer)** vs **TF‑IDF**
+- Same configuration: 5k features, (1,2)-grams, min_df=2, max_df=0.95
+
+4. **Model development (3 phases)**
+- **Phase 1:** baseline models (BoW only)
+- **Phase 2:** BoW + engineered features:
+`duplication_count`, `stopword_count`, `headline_length`, `word_count`
+- **Phase 3:** hyperparameter tuning (RandomizedSearchCV) → final model selection
+
+---
+
+## Results (held-out test set, deduplicated)
+
+Final winner: **Tuned XGBoost (BoW + engineered features)**
+
+- **Accuracy:** ~0.94
+- **Weighted F1-score:** ~0.94
+
+(Exact values are printed in the notebook output.)
+
+---
+
+## Repository structure
+.
+├── main.ipynb # notebook with well-documented Python code that conducts the analysis
+├── datasets/ 
+│ ├── training_data.csv
+│ └── testing_data.csv
+├── figures/ # saved plots from the notebook
+├── outputs/ # csv summaries + prediction files + accuracy estimation file
+├── models/ # saved models
+├── requirements.txt
+└── README.md
+└── NLP_Project_Julia.pptx # presentation file, presenting the project including analysis
 
 ## Deliverables
 
-1. **Python Code:** Provide well-documented Python code that conducts the analysis.
-2. **Predictions:** A csv file in the same format as `testing_data.csv` but with the predicted labels (0 or 1)
-3. **Accuracy estimation:** Provide the teacher with your estimation of how your model will perform.
-4. **Presentation:** You will present your model in a 10-minute presentation. Your teacher will provide further instructions.
+1. **Python Code:** main.ipynb
+2. **Predictions:** outputs/testing_data_predictions.csv
+3. **Accuracy estimation:** outputs/accuracy_estimation.md
+4. **Presentation:** NLP_Project_Julia.pptx
